@@ -19,6 +19,14 @@ Decidimos sniffear el tráfico directamente en la interfaz de uno de los miembro
 
 Ahí apareció la confirmación: en el milisegundo exacto en que ingresaba el paquete ICMP forjado desde el exterior, la tabla ARP del router miembro mutaba, apuntando el tráfico del Route Server hacia una ruta completamente incorrecta. El misterio estaba resuelto.
 
+### ⚠️ La variante crítica: Ataques silenciosos dirigidos al Puerto 179 (BGP)
+
+El ataque también es completamente válido (y se vuelve exponencialmente más difícil de detectar) si el atacante, en lugar de enviar un paquete ICMP echo request, envía un paquete `SYN` dirigido directamente al **puerto 179** (el puerto estándar que utiliza BGP). 
+
+Dado que tanto los Route Servers como los routers de los miembros de la IXP tienen este puerto lógicamente abierto para permitir el vecindario, los equipos siempre procesarán la petición y responderán con un `SYN-ACK`. En ese milisegundo, debido a la suplantación de identidad (spoofing), los dispositivos actualizan de inmediato su tabla de direcciones MAC y su caché ARP con la información del carrier intermediario por donde ingresó el paquete. 
+
+¿El resultado? El tráfico legítimo de la sesión BGP se desvía instantáneamente hacia una ruta muerta, destruyendo la adyacencia de los *peers* de forma silenciosa y sin levantar una sola alerta por inundación o denegación de servicio tradicional.
+
 ### 🎩 La Solución Definitiva (Seguridad en el plano de acceso y control)
 Para solucionar esta vulnerabilidad de inmediato y blindar la infraestructura a nivel de capa 2 y capa 3, implementamos dos medidas complementarias en caliente:
 
